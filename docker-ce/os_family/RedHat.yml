@@ -1,0 +1,33 @@
+---
+- gather_facts: yes
+  vars:
+    docker_user: "{{ ansible_facts['user_id'] }}"
+
+  tasks:
+    - name: Show Ansible User ID for RedHat
+      debug:
+        msg: "Ansible User ID: {{ docker_user }}"
+
+
+
+
+# tasks:
+
+  # - name: Install Docker CE
+  #   yum:
+  #     name: docker-ce
+  #     state: present
+  #     enablerepo: docker-ce-stable
+
+  # - name: Start Docker
+  #   service:
+  #     name: docker
+  #     state: started
+  #     enabled: yes
+
+  # - name: Add user to docker group
+  #   user:
+  #     name: "{{ docker_user }}"
+  #     groups: docker
+  #     append: yes
+
