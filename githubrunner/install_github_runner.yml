@@ -1,1 +1,54 @@
+---
+- name: Install GitHub Actions Runner
+  hosts: all
+  become: yes
 
+  vars:
+    runner_version: "2.303.0"
+    runner_arch: "x64"
+    runner_url: "https://github.com/actions/runner/releases/download/v{{ runner_version }}/actions-runner-linux-{{ runner_arch }}-{{ runner_version }}.tar.gz"
+    runner_dir: "/opt/github-runner"
+    github_token: "YOUR_GITHUB_TOKEN"
+    github_repo: "YOUR_GITHUB_REPO"
+
+  tasks:
+    - name: Ensure dependencies are installed
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - curl
+        - tar
+
+    - name: Create runner directory
+      file:
+        path: "{{ runner_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download GitHub Actions runner
+      get_url:
+        url: "{{ runner_url }}"
+        dest: "{{ runner_dir }}/actions-runner.tar.gz"
+
+    - name: Extract GitHub Actions runner
+      unarchive:
+        src: "{{ runner_dir }}/actions-runner.tar.gz"
+        dest: "{{ runner_dir }}"
+        remote_src: yes
+
+    - name: Configure GitHub Actions runner
+      command: ./config.sh --url https://github.com/{{ github_repo }} --token {{ github_token }}
+      args:
+        chdir: "{{ runner_dir }}"
+
+    - name: Install GitHub Actions runner service
+      command: ./svc.sh install
+      args:
+        chdir: "{{ runner_dir }}"
+
+    - name: Start GitHub Actions runner service
+      command: ./svc.sh start
+      args:
+        chdir: "{{ runner_dir }}"
+...
