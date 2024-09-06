@@ -56,4 +56,7 @@
       command: ./svc.sh start
       args:
         chdir: "{{ runner_dir }}"
+
+
+#ansible ghrunners -m github_release -a "user=actions repo=runner action=latest_release"
 ...
