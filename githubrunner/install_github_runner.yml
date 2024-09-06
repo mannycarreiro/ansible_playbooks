@@ -21,6 +21,10 @@
         - tar
         - pip
 
+    - name: Ensure github3.py depdendency is installed
+      pip:
+        name: github3.py
+    
     - name: Create runner directory
       file:
         path: "{{ runner_dir }}"
