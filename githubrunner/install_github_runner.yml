@@ -19,6 +19,7 @@
       loop:
         - curl
         - tar
+        - pip
 
     - name: Create runner directory
       file:
